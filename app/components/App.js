@@ -10,41 +10,54 @@ export default class App extends Component {
 	constructor(){
 		super();
 		this.handleMapLoad = this.handleMapLoad.bind(this);
+		this.getRoutes = this.getRoutes.bind(this);
+		
 		this.state = {
 			markers : []
 		}
 	}
 	handleMapLoad(map) {
 		this._mapComponent = map;
-		console.log('MAP COMPONENT', this._mapComponent)
 		if (map) {
 			// test if working
-			console.log(map.getZoom());
+			//console.log(map.getZoom());
 		}
-	};
+	}
+	getRoutes(vehiclesNum){
+		// vehiclesNum to enable deciding fleetSize
+		 const service = this.state.markers.map((order)=>{
+			return {
+				lat: order.delivery_latitude,
+				lng: order.delivery_longitude,
+				id: order.order_id,
+				name: order.order_id,
+				duration: 5 // don't know what this is
+			}
+		});
+		Api.getRoutes(service)
+			.then((res)=> console.log('whats happening, expecting ROUTES back',res))
+	}
 	componentDidMount(){
 		Api.fetchMarkers()
 		.then(data => {
 			this.setState(function() {
 				return {
-					markers: data.map(m=> { return {
-						...m,
-						position: {
-							lat:  m.delivery_latitude,
-							lng:  m.delivery_longitude
-						}
-					}
-					})
+					markers: data
 				};
 			});
-			console.log('MARKERS', this.state.markers)
 		});
 	}
 	render() {
-		const markers = this.state.markers;
-		console.log('rendering', this.state);
+		const markers = this.state.markers.map(m=> { return {
+			...m,
+			position: {
+				lat:  m.delivery_latitude,
+				lng:  m.delivery_longitude
+			}
+		}
+		});
 		return (
-			<div style={{ 'height' : '100vh'}}>
+			<div style={{ 'height' : '90vh'}}>
 				<AsyncGoogleMap
 					googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCwTJcSPTo9_Cd3fMWX16wriM1G9bcgrOA"
 					loadingElement={<div style={{ height: `100%` }}></div>}
@@ -54,7 +67,9 @@ export default class App extends Component {
 					onMapClick={_.noop}
 					markers={markers}
 					/>
-				<button type="button">Generate Routes</button>
+				<button type="button"
+				        style={{ 'marginTop' : '10px'}}
+				        onClick={() => this.getRoutes()}>Generate Routes</button>
 			</div>
 		)
 	}

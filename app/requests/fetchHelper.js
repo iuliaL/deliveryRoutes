@@ -1,7 +1,5 @@
 'use strict';
 
-const baseUrl = 'https://jsonblob.com/68a5b174-309c-11e7-ae4c-55254c90d649';
-
 /* fetch Promise checkStatus */
 
 function checkStatus(res) {
@@ -14,27 +12,50 @@ function checkStatus(res) {
 	}
 }
 
+const reqDetails = {
+	"url": "https://api.flightmap.io/api/v1/vrp",
+	"method": "POST",
+	"headers": {
+		"Authorization": "772ea600-78ad-11e6-a56b-0bff586a75e5",
+		"Content-Type": "application/json; charset=utf-8"
+	},
+	"rejectUnauthorized": false,
+	"body": {
+		
+		"fleet":[{
+			"id":1,
+			"lat":30.7188978,
+			"lng":76.8102981,
+			"latEnd":30.7188978,
+			"lngEnd":76.8102981,
+			"returnToStart":0
+		}],
+		
+		"maxVisits":6,
+		"polylines": false,
+		"distanceCalculation": false,
+		"speed":40,
+		"decideFleetSize":0
+	}
+};
+
 const makeRequest = function(
-	url,
-	method = 'GET',
 	payload,
-	params,
-	headers,
-	credentials = 'include', // if I need cookies
+	url = reqDetails.url,
+	method = reqDetails.method,
+	rejectUnauthorized = reqDetails.rejectUnauthorized,
+	headers = reqDetails.headers
 ) {
-	const options = { method, params, headers, credentials };
-	options.headers = {...options.headers, "Content-type": "application/json"};
-	
-	// check for client token (logged in) and add it to req header
-	if(localStorage.getItem('jwt')){
-		options.headers = {
-			...options.headers,
-			"Authorization": `Bearer ${localStorage.getItem('jwt')}`
+	const options = {method, rejectUnauthorized, headers};
+	if(payload){
+		options.body = {
+			...reqDetails.body,
+			service:  payload
 		}
 	}
-	if(payload){ options.body = JSON.stringify( payload)}
-	console.log('fetch call url, options', url, options);
-	return fetch(`${baseUrl}${url}`, options )
+	
+	console.log('CALL options', url, options);
+	return fetch(`${url}`, options )
 		.then(checkStatus)
 		.then(result => result.json())
 };

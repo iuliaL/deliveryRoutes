@@ -11,20 +11,15 @@ import {
 import withScriptjs from "react-google-maps/lib/async/withScriptjs";
 
 
-// todo make this functional stateless comp
-class AsyncGoogleMap extends Component {
-	constructor(props){
-		super(props);
-	}
-	render(){
-		console.log('Async props', this.props);
-		const { markers } = this.props;
+const AsyncGoogleMap = props =>{
+		const { markers } = props;
+		console.log('markers', markers);
 		return (
 			<GoogleMap
-				ref={this.props.onMapLoad}
+				ref={props.onMapLoad}
 				defaultZoom={11}
 				defaultCenter={{lat: 30.66386, lng: 76.85830}}
-				onClick={this.props.onMapClick}
+				onClick={props.onMapClick}
 			>
 				{markers.map(marker => (
 					<Marker
@@ -34,8 +29,8 @@ class AsyncGoogleMap extends Component {
 				))}
 			</GoogleMap>
 		)
-	}
-}
+	};
+
 AsyncGoogleMap.propTypes ={
 	markers: PropTypes.array.isRequired
 };
