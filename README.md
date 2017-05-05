@@ -7,6 +7,8 @@ Thanks for your understanding and for your interest
 
 
 clone the repo
+
 npm install
+
 npm start
 
