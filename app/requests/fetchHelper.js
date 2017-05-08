@@ -35,7 +35,7 @@ const reqDetails = {
 		"polylines": false,
 		"distanceCalculation": false,
 		"speed":40,
-		"decideFleetSize":0
+		"decideFleetSize":1
 	}
 };
 
@@ -48,13 +48,13 @@ const makeRequest = function(
 ) {
 	const options = {method, rejectUnauthorized, headers};
 	if(payload){
-		options.body = {
+		options.body = JSON.stringify({
 			...reqDetails.body,
 			service:  payload
-		}
+		});
 	}
 	
-	console.log('CALL options', url, options);
+	//console.log('CALL options', url, options);
 	return fetch(`${url}`, options )
 		.then(checkStatus)
 		.then(result => result.json())
