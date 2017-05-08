@@ -1,8 +1,8 @@
 ### Delivery assignment solution
 
 
-The POST call to https://api.flightmap.io/api/v1/vrp was returning a 503 status , Service Unavailable, so this is my solution.
-It’s partly functioning due to this service not working.
+This is my solution.
+Small notices, I did not implement everything in the snapshot, and didn't care about the styles as I assume this was not the purpose.
 Thanks for your understanding and for your interest
 
 
